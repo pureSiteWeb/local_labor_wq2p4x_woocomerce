@@ -1,31 +1,5 @@
 <?php
 
-// Overriding Core Fields
-// Hook in
-/*
-add_filter( 'woocommerce_checkout_fields' , 'custom_override_checkout_fields' );
-
-// Our hooked in function - $fields is passed via the filter!
-function custom_override_checkout_fields( $fields ) {
-     $fields['order']['order_comments']['placeholder'] = 'My new placeholder';
-     return $fields;
-}
-
-
-// Required
-// Hook in
-add_filter( 'woocommerce_default_address_fields' , 'custom_override_default_address_fields' );
-
-// Our hooked in function - $address_fields is passed via the filter!
-function custom_override_default_address_fields( $address_fields ) {
-     $address_fields['address_1']['required'] = false;
-
-     return $address_fields;
-}
-*/
-
-//Adding Custom Shipping And Billing Fields
-// Hook in
 add_filter( 'woocommerce_checkout_fields' , 'custom_override_checkout_fields' );
 
 // Our hooked in function – $fields is passed via the filter!
