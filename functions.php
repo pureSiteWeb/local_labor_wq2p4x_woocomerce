@@ -42,8 +42,30 @@ add_action( 'woocommerce_checkout_update_order_meta', 'tax_number_checkout_field
 
 function tax_number_checkout_field_update_order_meta( $order_id ) {
     if ( ! empty( $_POST['tax_number_field'] ) ) {
-        update_post_meta( $order_id, 'tax_number_field', sanitize_text_field( $_POST['tax_number_field'] ) );
+        update_post_meta( $order_id, 'Vásárló adószáma', sanitize_text_field( $_POST['tax_number_field'] ) );
     }
+}
+
+
+/**
+ * Process the checkout
+ */
+
+add_action('woocommerce_checkout_process', 'tax_number_checkout_field_process');
+
+function tax_number_checkout_field_process() {
+    // Check if set, if its not set add an error.
+    if ( ! $_POST['tax_number_field'] )
+        wc_add_notice( __( 'Céges vásárlás esetén adószám kitöltése kötelező' ), 'error' );
+}
+
+/**
+ * Display field value on the order edit page
+ */
+add_action( 'woocommerce_admin_order_data_after_billing_address', 'tax_number_checkout_field_display_admin_order_meta', 10, 1 );
+
+function tax_number_checkout_field_display_admin_order_meta($order){
+    echo '<p><strong>'.__('tax_number_field').':</strong> ' . get_post_meta( $order->id, 'tax_number_field', true ) . '</p>';
 }
 
 ?>
