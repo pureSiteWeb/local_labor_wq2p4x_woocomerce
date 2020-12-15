@@ -9,11 +9,11 @@ add_action( 'woocommerce_after_checkout_billing_form', 'personal_customer_checkb
 
 // checkbox field
 function personal_customer_checkbox( $checkout){
-     woocommerce_form_field( 'personal_customer' , array(
-          'type'    => 'checkbox',
-          'class'   => array('form-row-wide'),
-          'label'	=> 'Céges vásárlás',
-     ), $checkout->get_value( 'personal_customer' ));
+    woocommerce_form_field( 'personal_customer' , array(
+         'type'    => 'checkbox',
+         'class'   => array('woocommerce-form__input woocommerce-form__input-checkbox input-checkbox'),
+         'label'	=> 'Céges vásárlás',
+    ), $checkout->get_value( 'personal_customer' ));
 }
 
 
@@ -23,7 +23,7 @@ add_action( 'woocommerce_after_checkout_billing_form', 'tax_number_checkout_fiel
 // input field
 function tax_number_checkout_field( $checkout ) {
      
-     echo '<div>';
+    echo '<div class="tax_number" id="tax_number_data" style="display: none;">';
      woocommerce_form_field( 'tax_number_field', array(
           'type'    => 'text',
           'required'     => true,
@@ -67,5 +67,9 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', 'tax_number_ch
 function tax_number_checkout_field_display_admin_order_meta($order){
     echo '<p><strong>'.__('tax_number_field').':</strong> ' . get_post_meta( $order->id, 'tax_number_field', true ) . '</p>';
 }
+
+<script>
+<console class="log"></console>
+</script>
 
 ?>
