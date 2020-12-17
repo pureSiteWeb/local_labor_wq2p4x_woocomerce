@@ -5,6 +5,7 @@
  */
 
 // select
+/*
 add_action( 'woocommerce_after_checkout_billing_form', 'select_invoice' );
 
 function select_invoice( $checkout ){
@@ -20,6 +21,24 @@ function select_invoice( $checkout ){
 			)
 		), $checkout->get_value( 'contactmethod' ) ); 
 }
+*/
+
+add_filter( 'woocommerce_checkout_fields' , 'select_invoice' );
+  
+function select_invoice( $fields ) {
+    $fields['billing']['select_tax_number'] = array(
+        'type'          => 'select', // text, textarea, select, radio, checkbox, password, about custom validation a little later
+		// 'required'	=> true, // actually this parameter just adds "*" to the field
+		'class'         => array('form-row-wide'), // array only, read more about classes and styling in the previous step
+		'label'         => 'Preferred contact method',
+		'options'	=> array( // options for <select> or <input type="radio" />
+			'maganszemely'	=> 'Magánszemély', // 'value'=>'Name'
+			'vallalkozas'	=> 'Vállalkozás'
+			)
+        );
+        return $fields;
+
+}
 
 /**
  * Add the tax number fields to the checkout page
@@ -33,7 +52,6 @@ function new_adoszam_checkout_field( $fields ) {
         'label'     => __('Adószám', 'woocommerce'),
         'class'     => array('form-row-wide'),
         'clear'     => true,
-        'required'  => true
     );
     
     return $fields;
@@ -48,7 +66,6 @@ function new_adoazonosito_checkout_field( $fields ) {
         'label'     => __('Adó azonosító jel', 'woocommerce'),
         'class'     => array('form-row-wide'),
         'clear'     => true,
-        'required'  => true,
         'display'   => none
     );
     
@@ -56,11 +73,11 @@ function new_adoazonosito_checkout_field( $fields ) {
 
 }
 
-add_action( 'woocommerce_after_checkout_form', 'bbloomer_conditionally_hide_show_checkout_field');
+add_action( 'woocommerce_after_checkout_form', 'bbloomer_conditionally_hide_show_checkout_field', 9999 );
   
 function bbloomer_conditionally_hide_show_checkout_field() {
    wc_enqueue_js( "
-      jQuery('select#contactmethod').change(function(){
+      jQuery('select#select_tax_number').change(function(){
          if (jQuery(this).val() == 'maganszemely') {
             jQuery('#adoszam_field_field').hide();
             jQuery('#adoazonosito_field_field').show();
