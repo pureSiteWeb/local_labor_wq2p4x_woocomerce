@@ -5,19 +5,18 @@
  */
 
 // select
-add_action( 'woocommerce_after_checkout_billing_form', 'misha_select_field' );
+add_action( 'woocommerce_after_checkout_billing_form', 'select_invoice' );
 
-function misha_select_field( $checkout ){
+function select_invoice( $checkout ){
 
 	woocommerce_form_field( 'contactmethod', array(
 		'type'          => 'select', // text, textarea, select, radio, checkbox, password, about custom validation a little later
 		'required'	=> true, // actually this parameter just adds "*" to the field
-		'class'         => array('misha-field', 'form-row-wide'), // array only, read more about classes and styling in the previous step
+		'class'         => array('form-row-wide'), // array only, read more about classes and styling in the previous step
 		'label'         => 'Preferred contact method',
-		'label_class'   => 'misha-label', // sometimes you need to customize labels, both string and arrays are supported
 		'options'	=> array( // options for <select> or <input type="radio" />
-			'phone'	=> 'phone', // 'value'=>'Name'
-			'email'	=> 'email'
+			'maganszemely'	=> 'Magánszemély', // 'value'=>'Name'
+			'vallalkozas'	=> 'Vállalkozás'
 			)
 		), $checkout->get_value( 'contactmethod' ) ); 
 }
@@ -34,7 +33,7 @@ function new_adoszam_checkout_field( $fields ) {
         'label'     => __('Adószám', 'woocommerce'),
         'class'     => array('form-row-wide'),
         'clear'     => true,
-        'required'  => true,
+        'required'  => true
     );
     
     return $fields;
@@ -50,25 +49,26 @@ function new_adoazonosito_checkout_field( $fields ) {
         'class'     => array('form-row-wide'),
         'clear'     => true,
         'required'  => true,
+        'display'   => none
     );
     
     return $fields;
 
 }
 
-add_action( 'woocommerce_after_checkout_form', 'bbloomer_conditionally_hide_show_checkout_field', 9999 );
+add_action( 'woocommerce_after_checkout_form', 'bbloomer_conditionally_hide_show_checkout_field');
   
 function bbloomer_conditionally_hide_show_checkout_field() {
    wc_enqueue_js( "
       jQuery('select#contactmethod').change(function(){
-         if (jQuery(this).val() == 'phone') {
-            jQuery('#adoszam_field_field').show();
-            jQuery('#adoazonosito_field_field').fadeOut();
-         } else {
-            jQuery('#adoazonosito_field_field').show();
+         if (jQuery(this).val() == 'maganszemely') {
             jQuery('#adoszam_field_field').hide();
+            jQuery('#adoazonosito_field_field').show();
+         } else {
+            jQuery('#adoazonosito_field_field').hide();
+            jQuery('#adoszam_field_field').show();
          }
-      }).keyup();
+      }).change();
    ");
 }
 
