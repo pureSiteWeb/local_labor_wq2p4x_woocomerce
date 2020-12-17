@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Add the checkbox & tax number fields to the checkout
+ * Add the checkbox & tax number fields to the checkout page
  */
 
 add_filter( 'woocommerce_checkout_fields' , 'new_tax_number_checkout_field' );
@@ -46,6 +46,7 @@ function tax_number_hide() {
        
 }
 
+// required if checked
 add_action('woocommerce_checkout_process', 'check_if_selected');
  
 function check_if_selected() {
