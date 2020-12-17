@@ -1,58 +1,75 @@
 <?php
 
 /**
- * Add the checkbox & tax number fields to the checkout page
+ * Add the select filed to the checkout page
  */
 
-add_filter( 'woocommerce_checkout_fields' , 'new_tax_number_checkout_field' );
+// select
+add_action( 'woocommerce_after_checkout_billing_form', 'misha_select_field' );
+
+function misha_select_field( $checkout ){
+
+	woocommerce_form_field( 'contactmethod', array(
+		'type'          => 'select', // text, textarea, select, radio, checkbox, password, about custom validation a little later
+		'required'	=> true, // actually this parameter just adds "*" to the field
+		'class'         => array('misha-field', 'form-row-wide'), // array only, read more about classes and styling in the previous step
+		'label'         => 'Preferred contact method',
+		'label_class'   => 'misha-label', // sometimes you need to customize labels, both string and arrays are supported
+		'options'	=> array( // options for <select> or <input type="radio" />
+			'phone'	=> 'phone', // 'value'=>'Name'
+			'email'	=> 'email'
+			)
+		), $checkout->get_value( 'contactmethod' ) ); 
+}
+
+/**
+ * Add the tax number fields to the checkout page
+ */
+
+ // adoszam
+add_filter( 'woocommerce_checkout_fields' , 'new_adoszam_checkout_field' );
   
-function new_tax_number_checkout_field( $fields ) {
-    $fields['billing']['checkbox_personak_customer'] = array(
-        'type'      => 'checkbox',
-        'label'     => __('Céges vásárlás', 'woocommerce'),
-        'class'     => array('form-row-wide'),
-        'clear'     => true
-    );
-    $fields['billing']['tax_number_field'] = array(
+function new_adoszam_checkout_field( $fields ) {
+    $fields['billing']['adoszam_field'] = array(
         'label'     => __('Adószám', 'woocommerce'),
         'class'     => array('form-row-wide'),
         'clear'     => true,
-        // 'required'  => true
+        'required'  => true,
     );
     
     return $fields;
 
 }
 
-// hide if not checked
-add_action( 'woocommerce_after_checkout_form', 'tax_number_hide', 9999 );
-  
-function tax_number_hide() {
+//adoazonosito
+add_filter( 'woocommerce_checkout_fields' , 'new_adoazonosito_checkout_field' );
+
+function new_adoazonosito_checkout_field( $fields ) {
+    $fields['billing']['adoazonosito_field'] = array(
+        'label'     => __('Adó azonosító jel', 'woocommerce'),
+        'class'     => array('form-row-wide'),
+        'clear'     => true,
+        'required'  => true,
+    );
     
-  wc_enqueue_js( "
-      jQuery('input#checkbox_personak_customer').change(function(){
-           
-         if (! this.checked) {
-            // HIDE IF NOT CHECKED
-            jQuery('#tax_number_field_field').fadeOut();
-            jQuery('#tax_number_field_field input').val('');         
-         } else {
-            // SHOW IF CHECKED
-            jQuery('#tax_number_field_field').fadeIn();
-         }
-           
-      }).change();
-  ");
-       
+    return $fields;
+
 }
 
-// required if checked
-add_action('woocommerce_checkout_process', 'check_if_selected');
- 
-function check_if_selected() {
-
-    if ( !empty( $_POST['checkbox_personak_customer'] && empty( $_POST['tax_number_field']) ))
-		wc_add_notice( 'Céges vásárlás esetén adószám megadása kötelező', 'error' ); 
+add_action( 'woocommerce_after_checkout_form', 'bbloomer_conditionally_hide_show_checkout_field', 9999 );
+  
+function bbloomer_conditionally_hide_show_checkout_field() {
+   wc_enqueue_js( "
+      jQuery('select#contactmethod').change(function(){
+         if (jQuery(this).val() == 'phone') {
+            jQuery('#adoszam_field_field').show();
+            jQuery('#adoazonosito_field_field').fadeOut();
+         } else {
+            jQuery('#adoazonosito_field_field').show();
+            jQuery('#adoszam_field_field').hide();
+         }
+      }).keyup();
+   ");
 }
 
 /**
