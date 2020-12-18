@@ -102,16 +102,15 @@ function tax_number_checkout_field_update_order_meta( $order_id, $posted ) {
  */
 
 function display_order_data_to_user( $order_id ){  // display order received (_)
-    echo $posted['adoazonosito_field'];
+    //echo 'adoazon' . get_post_meta( $order_id, '_adoazonosito_field', true );
+    //echo 'adoszam' . get_post_meta( $order_id, '_adoszam_field', true );
 
-    if(  $posted['adoazonosito_field'] == 0){
+    if(  get_post_meta( $order_id, '_adoazonosito_field', true ) == '0'){
         echo 'Adószám: ' . get_post_meta( $order_id, '_adoszam_field', true ) . '<br>';
     }
     else{
         echo 'Adóazonsító: ' . get_post_meta( $order_id, '_adoazonosito_field', true );
     }
-    
-    
 }
 
 add_action( 'woocommerce_thankyou', 'display_order_data_to_user', 20 );
